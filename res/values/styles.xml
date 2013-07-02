@@ -1,0 +1,6 @@
+ <resources>
+
+	<style name="Theme.Styled" parent="Theme.Sherlock">
+	</style>
+
+</resources>

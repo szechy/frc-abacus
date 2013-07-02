@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="45sp"
+        android:textColor="#ff4444" 
+        android:gravity="center"
+        android:maxLines="2"/>
+    
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="#ffffff" 
+        android:layout_toRightOf="@+id/number"
+        android:layout_alignParentTop="true"
+        android:gravity="right"/>
+    
+    <TextView
+        android:id="@+id/hometown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#33b5e5"
+        android:textSize="15sp" 
+        android:layout_below="@+id/name"
+        android:layout_toRightOf="@+id/number"
+        android:gravity="right"/>
+    
+    <TextView
+        android:id="@+id/sponsors"
+        android:paddingTop="20dp" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:layout_below="@+id/hometown"
+        android:gravity="center"/>
+</RelativeLayout>

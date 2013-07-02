@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_create_team_list"
+          android:icon="@drawable/menu_create_list"
+          android:title="New TeamList"
+          android:showAsAction="ifRoom|withText" />
+</menu>

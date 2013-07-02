@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">NERDScout</string>
+    <string name="margin">margin</string>
+    <string name="colintest">datString</string>
+    <string name="hacker">IAmAHackerWithNoSpaces</string>
+
+</resources>
