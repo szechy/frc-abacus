@@ -8,25 +8,28 @@
         android:id="@+id/allianceNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
-        android:textSize="20dp"
-        android:textColor="#ff4444"/>
+        android:textSize="20sp"
+        android:textColor="#ff4444" />
     
     <TextView
         android:id="@+id/allianceCaptain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:paddingLeft="20dp"/>
     
     <TextView
         android:id="@+id/allianceFirstPick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff" 
+        android:paddingLeft="8dp"/>
     
     <TextView
         android:id="@+id/allianceSecondPick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:paddingLeft="8dp"/>
         
 </LinearLayout>

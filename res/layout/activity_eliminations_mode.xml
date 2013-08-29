@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    	<RelativeLayout
-    	    android:layout_width="match_parent"
-    	    android:layout_height="wrap_content"
-    	    android:orientation="horizontal" >
+    android:layout_height="match_parent" 
+    android:orientation="vertical" >
     	
-    		<ListView
-        		android:id="@+id/alliancesFirst"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content" 
-        		android:layout_weight="1"/>
-
-    		<ListView
-        		android:id="@+id/alliancesSecond"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_weight="1"/>
-    	</RelativeLayout>
+    	<GridView
+        	android:id="@+id/alliances"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" 
+        	android:numColumns="2"
+        	android:columnWidth="90dp"
+        	android:stretchMode="columnWidth"
+        	android:gravity="center"/>
+    	
+    	<TextView
+    	    android:id="@+id/divider"
+    	    android:textSize="3sp"
+			android:background="@drawable/eliminations_mode_divider" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/alliances"/>
+    		
+    	<ListView
+    		android:id="@+id/teamsAvailable"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:layout_below="@+id/divider" />
+ 			<!--android:dividerHeight="3dp" -->
 
 </RelativeLayout>

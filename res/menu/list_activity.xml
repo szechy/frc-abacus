@@ -4,4 +4,9 @@
           android:icon="@drawable/menu_create_list"
           android:title="New TeamList"
           android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/menu_go_to_eliminations_mode"
+          android:icon="@drawable/go_to_eliminations_mode"
+          android:title="Eliminations Mode"
+          android:showAsAction="ifRoom|withText" />
+
 </menu>
