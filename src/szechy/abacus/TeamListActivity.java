@@ -26,8 +26,9 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class TeamListActivity extends SherlockActivity {
 
-	private TeamItemDataSource datasource;
-	private TeamListDataSource listDatasource;
+	private TeamItemDbAdapter dbTeam;
+	private TeamListDbAdapter dbList;
+	private AbstractDbAdapter db;
 	int teamSelected = 0;
 	
 	@Override
@@ -37,11 +38,11 @@ public class TeamListActivity extends SherlockActivity {
     	
     	setTitle("Michigan Team List");
     	
-    	datasource = new TeamItemDataSource(this);
-    	datasource.open();
+    	dbTeam = new TeamItemDbAdapter(this);
+    	dbTeam.open();
     	
-    	listDatasource = new TeamListDataSource(this, datasource);
-    	listDatasource.open();
+    	dbList = new TeamListDbAdapter(this);
+    	dbList.open();
     	
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
@@ -49,7 +50,7 @@ public class TeamListActivity extends SherlockActivity {
 		Log.d("Rebuild SQL database?", String.valueOf(settings.getBoolean("dbExists", false)));
 		
 		if(!settings.getBoolean("dbExists", false)){
-			datasource.upgrade(2);
+			db.upgrade(2);
 	    	//parse all of the teams into TeamItems
 	    	InputStream inputStream = this.getResources().openRawResource(R.raw.irilist);
 	    	BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -57,7 +58,7 @@ public class TeamListActivity extends SherlockActivity {
 	    	try {
 				while((strRead=reader.readLine())!=null){
 					String[] splitArray = strRead.split("\t");
-					datasource.createTeamItem(new TeamItem(Integer.parseInt(splitArray[1]), splitArray[7],
+					dbTeam.createTeamItem(new TeamItem(Integer.parseInt(splitArray[1]), splitArray[7],
 							splitArray[4], splitArray[2]));
 					//Log.d("TeamListActivity", splitArray[4]);
 				}
@@ -75,7 +76,7 @@ public class TeamListActivity extends SherlockActivity {
     	
     	TeamItem[] values = {new TeamItem(33, "Killer Bees", "Auburn Hills", "Chrysler and Co.")};
     	//values = valuesPre.toArray(values);
-    	valuesPre = datasource.getAllTeamItems();
+    	valuesPre = dbTeam.getAllTeamItems();
     	values = (TeamItem[]) valuesPre.toArray();
     	TeamItemArrayAdapter adapter = new TeamItemArrayAdapter(getApplicationContext(), valuesPre, true, "main");
     	listview.setAdapter(adapter);
@@ -86,7 +87,7 @@ public class TeamListActivity extends SherlockActivity {
     				long id) {
     			TextView theNumber = (TextView)view.findViewById(R.id.teamNumber);
     			Intent i = new Intent(getApplicationContext(), TeamItemActivity.class);
-    			i.putExtra("teamID", datasource.getTeamItem(Integer.parseInt((String)theNumber.getText())).getTeamInfo());
+    			i.putExtra("teamID", dbTeam.getTeamItem(Integer.parseInt((String)theNumber.getText())).getTeamInfo());
     			startActivity(i);
     		}
     	});
@@ -102,34 +103,34 @@ public class TeamListActivity extends SherlockActivity {
     	final ListView menuListView = (ListView)findViewById(R.id.menuListView);
     	//Some default TeamList items
     	ArrayList<TeamItem> einstein = new ArrayList<TeamItem>();
-    	einstein.add(datasource.getTeamItem(33));
-    	einstein.add(datasource.getTeamItem(148));
-    	einstein.add(datasource.getTeamItem(303));
-    	einstein.add(datasource.getTeamItem(469));
-    	einstein.add(datasource.getTeamItem(862));
-    	einstein.add(datasource.getTeamItem(1241));
-    	einstein.add(datasource.getTeamItem(1477));
-    	einstein.add(datasource.getTeamItem(1640));
-    	einstein.add(datasource.getTeamItem(3476));
+    	einstein.add(dbTeam.getTeamItem(33));
+    	einstein.add(dbTeam.getTeamItem(148));
+    	einstein.add(dbTeam.getTeamItem(303));
+    	einstein.add(dbTeam.getTeamItem(469));
+    	einstein.add(dbTeam.getTeamItem(862));
+    	einstein.add(dbTeam.getTeamItem(1241));
+    	einstein.add(dbTeam.getTeamItem(1477));
+    	einstein.add(dbTeam.getTeamItem(1640));
+    	einstein.add(dbTeam.getTeamItem(3476));
     	ArrayList<TeamItem> ifi = new ArrayList<TeamItem>();
-    	ifi.add(datasource.getTeamItem(111));
-    	ifi.add(datasource.getTeamItem(148));
-    	ifi.add(datasource.getTeamItem(1114));
-    	ifi.add(datasource.getTeamItem(2337));
+    	ifi.add(dbTeam.getTeamItem(111));
+    	ifi.add(dbTeam.getTeamItem(148));
+    	ifi.add(dbTeam.getTeamItem(1114));
+    	ifi.add(dbTeam.getTeamItem(2337));
     	ArrayList<TeamItem> nasa = new ArrayList<TeamItem>();
-    	nasa.add(datasource.getTeamItem(71));
-    	nasa.add(datasource.getTeamItem(116));
-    	nasa.add(datasource.getTeamItem(118));
-    	nasa.add(datasource.getTeamItem(696));
-    	nasa.add(datasource.getTeamItem(1538));
-    	nasa.add(datasource.getTeamItem(1592));
-    	nasa.add(datasource.getTeamItem(1902));
-    	nasa.add(datasource.getTeamItem(2252));
-    	nasa.add(datasource.getTeamItem(2337));
-    	nasa.add(datasource.getTeamItem(3947));
+    	nasa.add(dbTeam.getTeamItem(71));
+    	nasa.add(dbTeam.getTeamItem(116));
+    	nasa.add(dbTeam.getTeamItem(118));
+    	nasa.add(dbTeam.getTeamItem(696));
+    	nasa.add(dbTeam.getTeamItem(1538));
+    	nasa.add(dbTeam.getTeamItem(1592));
+    	nasa.add(dbTeam.getTeamItem(1902));
+    	nasa.add(dbTeam.getTeamItem(2252));
+    	nasa.add(dbTeam.getTeamItem(2337));
+    	nasa.add(dbTeam.getTeamItem(3947));
     	
     	ArrayList<TeamList> menuList = new ArrayList<TeamList>();
-    	menuList.addAll(listDatasource.getAllTeamLists());
+    	menuList.addAll(dbList.getAllTeamLists());
     	menuList.add(new TeamList("FIRSTInMichigan", valuesPre));
     	menuList.add(new TeamList("Team IFI", ifi));
     	menuList.add(new TeamList("Team NASA", nasa));
@@ -176,12 +177,12 @@ public class TeamListActivity extends SherlockActivity {
     }
     
     protected void onResume(){
-    	datasource.open();
+    	dbTeam.open();
     	super.onResume();
     }
 
     protected void onPause(){
-    	datasource.close();
+    	dbTeam.close();
     	super.onPause();
     }
 

@@ -26,8 +26,8 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class EliminationModeActivity extends SherlockActivity {
 
-	private TeamItemDataSource datasource;
-	private TeamListDataSource listDatasource;
+	private AllianceDbAdapter dbAlliance;
+	private TeamListDbAdapter dbList;
 	private TeamList master;
 	TeamItemArrayAdapter available;
 	AllianceEliminationModeArrayAdapter allianceAdapter;
@@ -41,10 +41,10 @@ public class EliminationModeActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_eliminations_mode);
 		
-		datasource = new TeamItemDataSource(this);
-		datasource.open();
-		listDatasource = new TeamListDataSource(this, datasource);
-		listDatasource.open();
+		dbAlliance = new AllianceDbAdapter(this);
+		dbAlliance.open();
+		dbList = new TeamListDbAdapter(this);
+		dbList.open();
 		
 		/*
 		 * Some special first-application time stuff		
@@ -57,7 +57,7 @@ public class EliminationModeActivity extends SherlockActivity {
 		if(!settings.getBoolean("dbExists", false)){
 			editor.putInt("position", 0);
 			editor.putInt("round", 0);
-			datasource.upgrade(2);
+			dbAlliance.upgrade(2);
 	    	//parse all of the teams into TeamItems
 	    	InputStream inputStream = this.getResources().openRawResource(R.raw.irilist);
 	    	BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -65,7 +65,7 @@ public class EliminationModeActivity extends SherlockActivity {
 	    	try {
 				while((strRead=reader.readLine())!=null){
 					String[] splitArray = strRead.split("\t");
-					datasource.createTeamItem(new TeamItem(Integer.parseInt(splitArray[1]), splitArray[7],
+					dbAlliance.createTeamItem(new TeamItem(Integer.parseInt(splitArray[1]), splitArray[7],
 							splitArray[4], splitArray[2]));
 					//Log.d("TeamListActivity", splitArray[4]);
 				}
@@ -75,9 +75,9 @@ public class EliminationModeActivity extends SherlockActivity {
 				Log.d("TeamListActivity", "Whoops, IOException on the team handling");
 			}
 	    	for(int i = 1; i < 9; i++)
-	    		datasource.createAlliance(new Alliance(i, true));
+	    		dbAlliance.createAlliance(new Alliance(i, true));
 
-	    	listDatasource.addTeamList(new TeamList("iri", datasource.getAllTeamItems()));
+	    	dbList.addTeamList(new TeamList("iri", dbAlliance.getAllTeamItems()));
 	    	
 	    	editor.putBoolean("dbExists", true);
 	    	editor.commit();
@@ -88,19 +88,19 @@ public class EliminationModeActivity extends SherlockActivity {
 		/*
 		 * For when this is not the primary activity
 		 * String teamListName = getIntent().getStringExtra("teamListName");
-		 * master = listDatasource.getTeamList(getIntent().getStringExtra("teamListName"));  
+		 * master = dbList.getTeamList(getIntent().getStringExtra("teamListName"));  
 		 * setTitle(teamListName);
 		 * */
 		
-    	master = listDatasource.getTeamList("iri");
+    	master = dbList.getTeamList("iri");
 		setTitle("2013 IRI");
 		
     	available = new TeamItemArrayAdapter(getApplicationContext(), master.getTeams(), false, "iri");
     	final ListView teamsAvailable = (ListView)findViewById(R.id.teamsAvailable);
     	teamsAvailable.setAdapter(available);
-    	Alliance[] alliancesToSend = {datasource.getAlliance(1), datasource.getAlliance(2), datasource.getAlliance(3),
-    			datasource.getAlliance(4), datasource.getAlliance(5), datasource.getAlliance(6), datasource.getAlliance(7),
-    			datasource.getAlliance(8)};
+    	Alliance[] alliancesToSend = {dbAlliance.getAlliance(1), dbAlliance.getAlliance(2), dbAlliance.getAlliance(3),
+    			dbAlliance.getAlliance(4), dbAlliance.getAlliance(5), dbAlliance.getAlliance(6), dbAlliance.getAlliance(7),
+    			dbAlliance.getAlliance(8)};
     	
     	allianceAdapter = new AllianceEliminationModeArrayAdapter(this, alliancesToSend);
     	final GridView alliances = (GridView)findViewById(R.id.alliances);
@@ -158,11 +158,11 @@ public class EliminationModeActivity extends SherlockActivity {
 				//updateShareIntent();
 				Alliance[] alliances = allianceAdapter.getAlliances();
 				for(int i = 0; i < 8; i++){
-					datasource.updateAlliance(alliances[i]);
+					dbAlliance.updateAlliance(alliances[i]);
 				}
 				String construct = new String();
 				construct = "2013 IRI Alliances\n";
-				construct += datasource.getAlliancesAsString();
+				construct += dbAlliance.getAlliancesAsString();
 				//Toast.makeText(this,  construct, Toast.LENGTH_SHORT).show();
 				shareIntent.removeExtra(Intent.ACTION_SEND);
 				shareIntent.putExtra(Intent.EXTRA_TEXT, construct);
@@ -183,11 +183,11 @@ public class EliminationModeActivity extends SherlockActivity {
 	private Intent updateShareIntent(){
 		Alliance[] alliances = allianceAdapter.getAlliances();
 		for(int i = 0; i < 8; i++){
-			datasource.updateAlliance(alliances[i]);
+			dbAlliance.updateAlliance(alliances[i]);
 		}
 		String construct = new String();
 		construct = "2013 IRI Alliances\n";
-		construct += datasource.getAlliancesAsString();
+		construct += dbAlliance.getAlliancesAsString();
 		//Toast.makeText(this, construct, Toast.LENGTH_SHORT).show();
 		shareIntent.removeExtra(Intent.EXTRA_TEXT);
 		shareIntent.putExtra(Intent.EXTRA_TEXT, construct);
@@ -201,18 +201,18 @@ public class EliminationModeActivity extends SherlockActivity {
 	
 	protected void onResume(){
 		super.onResume();
-		datasource.open();
+		dbAlliance.open();
 	}
 	
 	protected void onPause(){
 		super.onPause();
 		Alliance[] alliances = allianceAdapter.getAlliances();
 		for(int i = 0; i < 8; i++){
-			datasource.updateAlliance(alliances[i]);
+			dbAlliance.updateAlliance(alliances[i]);
 		}
-		listDatasource.updateTeamList(available.getTeamList());
+		dbList.updateTeamList(available.getTeamList());
 		//updateShareIntent();
-		datasource.close();
+		dbAlliance.close();
 	}
 	
 	protected void onStop(){

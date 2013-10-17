@@ -4,9 +4,9 @@ import android.os.AsyncTask;
 
 public class TeamItemListTask extends AsyncTask{
 
-	private final TeamItemDataSource datasource; 
+	private final TeamItemDbAdapter datasource; 
 	
-	public TeamItemListTask(TeamItemDataSource datDatasource){
+	public TeamItemListTask(TeamItemDbAdapter datDatasource){
 		datasource = datDatasource;
 	}
 	
