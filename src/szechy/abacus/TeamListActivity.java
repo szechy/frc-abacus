@@ -10,10 +10,12 @@ import java.util.Arrays;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,19 +24,19 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class TeamListActivity extends SherlockActivity {
 
 	private TeamItemDbAdapter dbTeam;
 	private TeamListDbAdapter dbList;
 	private AbstractDbAdapter db;
+	private DrawerLayout mDrawerLayout;
 	int teamSelected = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.activity_team_list);
+    	setContentView(R.layout.activity_drawer_team_list);
     	
     	setTitle("Michigan Team List");
     	
@@ -92,15 +94,7 @@ public class TeamListActivity extends SherlockActivity {
     		}
     	});
     	
-    	//setup SlidingMenu
-    	SlidingMenu menu = new SlidingMenu(this);
-    	menu.setMode(SlidingMenu.LEFT);
-    	menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-    	menu.setMenu(R.layout.menu_frame);
-    	menu.setBehindOffset(300);
-    	menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-    	
-    	final ListView menuListView = (ListView)findViewById(R.id.menuListView);
+    	final ListView mDrawerList = (ListView)findViewById(R.id.left_drawer);
     	//Some default TeamList items
     	ArrayList<TeamItem> einstein = new ArrayList<TeamItem>();
     	einstein.add(dbTeam.getTeamItem(33));
@@ -138,14 +132,13 @@ public class TeamListActivity extends SherlockActivity {
     	menuList.add(new TeamList("Don't Mess With Texas", new ArrayList<TeamItem>()));
     	menuList.add(new TeamList("Einstein Field", einstein));
     	
-    	final SlidingMenuListArrayAdapter menuAdapter = new SlidingMenuListArrayAdapter(this, menuList.toArray(new TeamList[menuList.size()]));
-    	menuListView.setAdapter(menuAdapter);
-    	menuListView.setOnItemClickListener(new OnItemClickListener(){
-    		@Override
+    	final ArrayAdapter menuAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, menuList.toArray(new TeamList[menuList.size()]));
+    	mDrawerList.setAdapter(menuAdapter);
+    	mDrawerList.setOnItemClickListener(new DrawerItemClickListener(){
     		public void onItemClick(AdapterView<?> parent, final View view, int position, long id){
-    			final TeamItemArrayAdapter newAdapter = new TeamItemArrayAdapter(getApplicationContext(), 
-    					menuAdapter.getTeamQueries()[position].getTeams(), true, "main");
-    			listview.setAdapter(newAdapter);
+    		//	final TeamItemArrayAdapter newAdapter = new TeamItemArrayAdapter(getApplicationContext(), 
+    		//		menuAdapter.getTeamQueries()[position].getTeams(), true, "main");
+    		//listview.setAdapter(newAdapter);
     		}
     	});
     	
